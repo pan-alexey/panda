@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "skipLibCheck": true,
+    "jsx": "react",
+    "lib": ["dom", "esnext"],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true,
+    "resolveJsonModule": true,
+    "module": "commonjs",
+    "target": "esnext",
+    "declaration": true,
+    "types": [
+      "node",
+      "webpack/module"
+    ],
+  },
+  "files": [
+    "src/main.d.ts",
+    "src/index.ts",
+  ]
+}
