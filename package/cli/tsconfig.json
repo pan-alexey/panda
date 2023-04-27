@@ -3,7 +3,6 @@
     "jsx": "react",
     "outDir": "./dist/",
     "module": "commonjs",
-    "declaration": true,
     "noImplicitAny": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
@@ -11,6 +10,7 @@
     "strict": true,
     "removeComments": true,
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "types": [
       "node",
       "jest",
@@ -23,5 +23,5 @@
     "dist",
     "**/__test__/*"
   ],
-  "include": ["src/index.ts"]
+  "include": ["src/main/index.ts"]
 }

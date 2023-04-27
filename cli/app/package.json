@@ -1,0 +1,56 @@
+{
+  "name": "@panda/cli-app",
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "module"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build":"tsc",
+    "clear": "rimraf build",
+    "test": "jest --config jest.config.ts",
+    "test:coverage": "jest --config jest.config.ts  --coverage",
+    "lint": "eslint ./ --ext .js --ext .ts",
+    "lint:fix": "eslint ./ --ext .js --ext .ts --fix"
+  },
+  "devDependencies": {
+    "@panda/eslint-config": "^1.0.0",
+    "@panda/prettier-config": "^1.0.0",
+    "@types/jest": "^29.2.4",
+    "@types/node": "^18.6.2",
+    "@types/webpack": "^5.28.0",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^28.0.7",
+    "jest": "^28.1.3",
+    "@types/express":"^4.17.17"
+  },
+  "dependencies": {
+    "@panda/core-app": "^1.0.0",
+    "@panda/tools-builder": "^1.0.0",
+    "@panda/cli-config": "^1.0.0",
+    "typescript": "^5.0.3",
+    "express":"^4.18.2",
+    "webpack": "^5.79.0",
+    "webpack-hmr-server": "^1.1.10",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "css-loader": "^6.7.1",
+    "@babel/core": "^7.18.13",
+    "@babel/eslint-parser": "^7.18.9",
+    "@babel/plugin-transform-runtime": "^7.18.10",
+    "@babel/preset-env": "^7.18.10",
+    "@babel/preset-react": "^7.18.6",
+    "@babel/preset-typescript": "7.18.6",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
+    "react-refresh": "^0.14.0",
+    "sass": "^1.54.8",
+    "sass-loader": "^13.0.2",
+    "style-loader": "^3.3.1",
+    "babel-loader":"^8.2.5"
+  }
+}

@@ -1,0 +1,2 @@
+Widget hooks
+Widget types

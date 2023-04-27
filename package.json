@@ -10,11 +10,14 @@
       "**/@panda/eslint-*",
       "**/@panda/prettier-*",
       "**/@panda/core-*",
+      "**/@panda/core",
       "**/@panda/cli-*",
+      "**/@panda/cli",
       "**/react-dom"
     ],
     "packages": [
       "shared/**",
+      "tools/**",
       "cli/**",
       "core/**",
       "package/**",
@@ -33,7 +36,7 @@
     "🚧": "----------------------------------------",
     "lerna:test": "lerna run test --parallel",
     "📦": "----------------------------------------",
-    "lerna:build": "npm run lerna:build-cli && npm run lerna:build-package",
+    "lerna:build": "yarn run lerna:build-cli && yarn run lerna:build-package",
     "lerna:build-cli": "lerna run build --parallel --scope @panda/cli-*",
     "lerna:build-package": "lerna run build --scope @panda/cli",
     "🧹": "----------------------------------------",

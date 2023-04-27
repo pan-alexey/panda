@@ -1,28 +1,17 @@
-// import type { Config } from '@panda/core';
+import config from '@panda/cli';
+import type { Config } from '@panda/cli';
 
-const data = [
-  { name: 'widget.widget4', props: {}, important: true },
-  { name: 'widget.widget1', props: { test: 1 } },
-  {
-    name: 'context.context1',
-    props: {},
-    children: [
-      { name: 'widget.widget1', props: { test: 2 } },
-      { name: 'widget.widget2', props: { test: 3 }, children: [{ name: 'widget.widget1', props: { test: 4 } }] },
-    ],
-  },
-  { name: 'widget.widget1', props: {} },
-];
+export default config(async () => {
+  const config: Config = {
+    name: 'test',
+    debug: {
+      httpPort: 8888,
+      getState: async (params) => {
+        console.log('params', params.url);
+        return null;
+      }
+    },
+  };
 
-
-const config = {
-  name: "widget.navbar@1.0",
-  data: async () => {
-    return data;
-  },
-  // umd: [],
-  // shared: [],
-  // todo
-};
-
-export default config;
+  return config;
+});

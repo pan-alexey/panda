@@ -3,8 +3,14 @@
   "version": "1.0.0-dev",
   "private": true,
   "scripts": {
-    "dev": "panda-cli",
-    "test": "echo 'jest test with type check'",
+    "dev": "panda-cli dev --config ./config/main.ts",
+    "build": "panda-cli build",
+    "build:default": "panda-cli build",
+    "build:help": "panda-cli build -h && panda-cli help build",
+    "development": "panda-cli dev",
+    "publish": "panda-cli publish",
+    "help": "panda-cli help",
+    "test:jest": "echo 'jest test with type check'",
     "lint": "eslint ./ --ext .ts,.tsx,.js,.jsx",
     "lint:fix": "yarn lint --fix"
   },
@@ -14,7 +20,8 @@
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "@types/webpack": "^5.28.0",
-    "typescript": "^5.0.3"
+    "typescript": "^5.0.3",
+    "node-fetch":"^3.3.1"
   },
   "dependencies": {
     "react": "^18.2.0"
