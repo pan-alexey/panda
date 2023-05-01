@@ -8,9 +8,8 @@ import { DevServer } from './server';
 import type { MultiBuilderState } from '@panda/tools-builder';
 import type { Config } from '@panda/cli-config';
 
-const devServer = new DevServer();
 const buildClientPath = path.resolve(process.cwd(), './node_modules/.panda.client.dev');
-const buildServerPath = path.resolve(process.cwd(), './node_modules/.panda.client.dev');
+const buildServerPath = path.resolve(process.cwd(), './node_modules/.panda.server.dev');
 
 const entries = {
   widget: path.resolve(process.cwd(), './src/index.tsx'),
@@ -18,7 +17,10 @@ const entries = {
   appServer: resolvePackageFile('@panda/cli-app/module/app.server.tsx'),
   bootstrapClient: resolvePackageFile('@panda/cli-app/module/bootstrap.client.ts'),
   bootstrapServer: resolvePackageFile('@panda/cli-app/module/bootstrap.server.ts'),
+  manifestJson: path.resolve(buildClientPath, './manifest.json'),
 };
+
+const devServer = new DevServer();
 
 export default async (config: Config) => {
   if (!entries.appClient) {
@@ -29,23 +31,24 @@ export default async (config: Config) => {
   const port = config.debug.httpPort;
   devServer.ready(false);
   devServer.public(buildClientPath);
-  // await devServer.listen(port);
+  await devServer.listen(port);
 
   const clientCompiler = webpack(
     getConfig({
       outputPath: buildClientPath,
       appClient: entries.appClient,
       widgetEntry: entries.widget,
+      manifestJson: entries.manifestJson,
     }),
   );
 
-  const serverCompiler = webpack(
-    getConfig({
-      outputPath: buildClientPath,
-      appClient: entries.appClient,
-      widgetEntry: entries.widget,
-    }),
-  );
+  // const serverCompiler = webpack(
+  //   getConfig({
+  //     outputPath: buildClientPath,
+  //     appClient: entries.appClient,
+  //     widgetEntry: entries.widget,
+  //   }),
+  // );
 
   // add hmr client
   new webpack.EntryPlugin(clientCompiler.context, 'webpack-hmr-server/client.js', {
@@ -53,11 +56,6 @@ export default async (config: Config) => {
   }).apply(clientCompiler);
 
   const builder = new WatchBuilder(clientCompiler);
-
-  // const builder = new MultiBuilder({
-  //   client: new WatchBuilder(clientCompiler),
-  //   // server: new WatchBuilder(serverCompiler),
-  // });
 
   builder
     .on('start', (states) => {
@@ -67,9 +65,17 @@ export default async (config: Config) => {
     .on('progress', (states) => {
       console.log('progress =>', states.status, states.progress.time, states.progress.progress);
     })
-    .on('done', (states) => {
+    .on('done', async (states) => {
       console.log('done =>', states.status, states.progress.time, states.progress.progress);
+      if (states.compiler.stats) {
+        await devServer._registerManifest(entries.manifestJson);
+        devServer.ready(true);
+        console.log(`Server run in http://127.0.0.1:${devServer.getPort()}`);
+        devServer.sendHmr(states.compiler.stats);
+        console.log('HRM send');
+      }
     });
+
   // const builder = new WatchBuilder(clientCompiler);
   // builder
   //   .on('start', () => {

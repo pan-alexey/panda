@@ -30,6 +30,7 @@
     "@types/express":"^4.17.17"
   },
   "dependencies": {
+    "fs-extra": "^11.1.1",
     "@panda/core-app": "^1.0.0",
     "@panda/tools-builder": "^1.0.0",
     "@panda/cli-config": "^1.0.0",

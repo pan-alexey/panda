@@ -28,9 +28,9 @@ export class MultiBuilder<Builders extends Record<string, Builder>> {
   }
 
   private listenCompilers() {
-    const names = Object.keys(this.compilers) as unknown as Array<keyof Builders>;
-    names.forEach((name: keyof Builders) => {
+    Object.keys(this.compilers).forEach((name) => {
       const compiler = this.compilers[name];
+
       compiler
         .on('start', () => {
           this.processing();
@@ -60,7 +60,7 @@ export class MultiBuilder<Builders extends Record<string, Builder>> {
     return names.map((name) => states[name].status);
   }
 
-  public processing(): void {
+  protected processing(): void {
     // Ignore created statuses
     const statuses = this.mapCompilerStatuses().filter((status) => status !== 'created');
 

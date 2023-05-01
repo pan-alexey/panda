@@ -22,23 +22,10 @@ export type BuilderState = {
 
 export type BuilderCallback = (state: BuilderState) => void;
 
-// todo create once
 export abstract class Builder {
   protected compiler: webpack.Compiler;
   protected progressPlugin: CustomProgressPlugin;
   private startTime = 0;
-
-  // private status: BuilderStatus = 'created';
-  // private compilerState: CompilerState = {
-  //   stats: null,
-  //   err: null,
-  // };
-  // private progress: BuilderProgress = {
-  //   time: 0,
-  //   status: 'created',
-  //   progress: 0,
-  //   message: '',
-  // };
 
   private state: BuilderState = {
     status: 'created',

@@ -22,7 +22,6 @@ import getConfig from './components/getConfig';
 
   // 4. STEP
   // Create building application
-
   const cliApp = new CliApp.App(config);
 
   await cliApp.run(commandArgs.mode);

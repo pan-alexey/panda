@@ -1,7 +1,8 @@
-import type { Configuration as WebpackConfiguration } from 'webpack';
-import * as path from 'path';
 import webpack from 'webpack';
+import path from 'path';
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
+import { AssetsManifestPlugin } from './plugins.dev/assetsManifestPlugin';
+import type { Configuration as WebpackConfiguration } from 'webpack';
 
 const { ModuleFederationPlugin } = webpack.container;
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -13,6 +14,7 @@ export interface ConfigProps {
   outputPath: string;
   widgetEntry: string;
   appClient: string;
+  manifestJson: string;
 }
 
 export const getConfig = (props: ConfigProps): WebpackConfiguration => {
@@ -21,6 +23,21 @@ export const getConfig = (props: ConfigProps): WebpackConfiguration => {
     devtool: 'source-map',
     mode: 'development',
     plugins: [
+      new AssetsManifestPlugin({
+        statsOptions: {
+          outputPath: false,
+          cached: false,
+          cachedAssets: false,
+          chunks: false,
+          chunkModules: false,
+          chunkOrigins: false,
+          modules: false,
+          nestedModules: false,
+          reasons: false,
+          relatedAssets: false,
+        },
+        output: props.manifestJson,
+      }),
       new webpack.HotModuleReplacementPlugin(),
       new ReactRefreshWebpackPlugin({
         overlay: false,
