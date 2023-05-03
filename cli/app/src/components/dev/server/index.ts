@@ -5,6 +5,13 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 import { createHotServer } from 'webpack-hmr-server';
 import fs from 'fs-extra';
 
+interface Manifest {
+  js: {
+    initialJS: string[];
+    allJS: string[];
+  };
+};
+
 export class DevServer {
   private expressApp: Express = express();
   private server = http.createServer(this.expressApp);
@@ -12,7 +19,14 @@ export class DevServer {
   private isReady = false;
   private port = 0;
 
-  private manifest: webpack.StatsCompilation = {};
+  private manifest: Manifest = {
+    js: {
+      initialJS: [],
+      allJS: [],
+    },
+  };
+
+  private ssr: () => Promise<string> = async () => '';
 
   constructor() {
     this.useReadyMiddleware();
@@ -38,13 +52,15 @@ export class DevServer {
   }
 
   private registerStaticDev() {
-    this.expressApp.get('/', (req, res) => {
-      const assets = this.manifest.assets || [];
-      const headScript = assets
+    this.expressApp.get('/', async (req, res) => {
+      const initialJS = this.manifest.js.initialJS;
+      const headScript = initialJS
         .map((asset) => {
-          return ` <script defer src="/${asset.name}"></script>`;
+          return ` <script defer src="/${asset}"></script>`;
         })
         .join('');
+
+      const html = await this.ssr();
 
       res.send(`<!DOCTYPE html>
       <html lang="en">
@@ -55,7 +71,7 @@ export class DevServer {
           ${headScript}
         </head>
         <body>
-          <div id="root"></div>
+          <div id="root">${html}</div>
         </body>
       </html>`);
     });
@@ -63,7 +79,16 @@ export class DevServer {
 
   public async _registerManifest(jsonPath: string) {
     try {
-      this.manifest = (await fs.readJSON(jsonPath)) as webpack.StatsCompilation;
+      this.manifest = (await fs.readJSON(jsonPath)) as Manifest;
+    } catch (error) {}
+  }
+
+  public async _regiseterSSR(modulePath: string) {
+    try {
+      // clear require cache
+      delete require.cache[require.resolve(modulePath)];
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      this.ssr = require(modulePath).render as () => Promise<string>;
     } catch (error) {}
   }
 

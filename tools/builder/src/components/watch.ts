@@ -8,14 +8,13 @@ interface WatchOptions {
   poll?: number | boolean;
 }
 
-const DEFAULT_WATCH_OPTIONS: WatchOptions = {
-  aggregateTimeout: 10,
-  poll: 10,
-};
-
 export class WatchBuilder extends Builder {
-  constructor(compiler: webpack.Compiler) {
+  private watchOptions: WatchOptions;
+
+  constructor(compiler: webpack.Compiler, watchOptions: WatchOptions = {}) {
     super(compiler);
+
+    this.watchOptions = watchOptions;
   }
 
   public run(): Promise<BuilderState> {
@@ -31,7 +30,8 @@ export class WatchBuilder extends Builder {
         this.startHandler();
       });
 
-      this.compiler.watch(DEFAULT_WATCH_OPTIONS, (err) => {
+      // add ignored path
+      this.compiler.watch(this.watchOptions, (err) => {
         if (err) {
           this.errorHandler(err);
         }

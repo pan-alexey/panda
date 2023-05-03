@@ -13,11 +13,11 @@ const appName = 'application'; // Application is singleton
 export interface ConfigProps {
   outputPath: string;
   widgetEntry: string;
-  appClient: string;
+  app: string;
   manifestJson: string;
 }
 
-export const getConfig = (props: ConfigProps): WebpackConfiguration => {
+export default (props: ConfigProps): WebpackConfiguration => {
   const config: WebpackConfiguration = {
     target: 'web',
     devtool: 'source-map',
@@ -35,6 +35,8 @@ export const getConfig = (props: ConfigProps): WebpackConfiguration => {
           nestedModules: false,
           reasons: false,
           relatedAssets: false,
+          // ids: true,
+          // publicPath: true,
         },
         output: props.manifestJson,
       }),
@@ -49,7 +51,7 @@ export const getConfig = (props: ConfigProps): WebpackConfiguration => {
     ],
     context: process.cwd(),
     entry: {
-      index: props.appClient,
+      index: props.app,
     },
     output: {
       chunkLoadingGlobal: `webpack_chunks[${appName}]`,

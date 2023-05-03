@@ -1,4 +1,5 @@
 import React from 'react';
+import { renderComponent } from './render';
 
 export class App {
   private widgets: Record<string, React.ElementType> = {};
@@ -7,13 +8,13 @@ export class App {
     this.widgets[name] = element;
   }
 
-  public registerApp() {}
-
   public async renderHead(): Promise<string> {
     return '';
   }
 
   public async renderBody(): Promise<string> {
-    return '';
+    const Component = this.widgets['widget-1'] || <></>;
+    const html = renderComponent(<Component />);
+    return html;
   }
 }

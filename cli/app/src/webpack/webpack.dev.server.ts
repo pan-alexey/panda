@@ -1,42 +1,46 @@
-import type { Configuration as WebpackConfiguration } from 'webpack';
-import * as path from 'path';
 import webpack from 'webpack';
+import type { Configuration as WebpackConfiguration } from 'webpack';
 
 const { ModuleFederationPlugin } = webpack.container;
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const shared = require('@panda/core-app/webpack/shared.js');
+const shared = require('@panda/core-app/webpack/shared.js')
 
 const appName = 'application'; // Application is singleton
 
-export default (): WebpackConfiguration => {
+export interface ConfigProps {
+  outputPath: string;
+  widgetEntry: string;
+  app: string;
+}
+
+export default (props: ConfigProps): WebpackConfiguration => {
   const config: WebpackConfiguration = {
-    entry: {
-      index: path.resolve('./src/server/index.tsx'),
-    },
-    mode: 'production',
     devtool: 'source-map',
     target: 'node',
+    mode: 'development',
+    plugins: [
+      new ModuleFederationPlugin({
+        library: { type: 'commonjs-module' },
+        name: appName,
+        shared,
+      }),
+    ],
+    context: process.cwd(),
+    entry: {
+      index: props.app,
+    },
     output: {
-      uniqueName: appName, // in package
+      uniqueName: appName,
       libraryTarget: 'umd',
-      path: path.resolve('./dist/server'),
+      path: props.outputPath,
       filename: 'index.js',
+      clean: true,
     },
     resolve: {
       extensions: ['.js', '.ts', '.tsx', '.css'],
       alias: {
-        '~': path.resolve('src'),
+        '~widget$': props.widgetEntry, // используем alias для подключения виджета ???
       },
-    },
-    plugins: [
-      new ModuleFederationPlugin({
-        name: appName,
-        shared,
-        library: { type: 'commonjs-module' },
-      }),
-    ],
-    optimization: {
-      minimize: false,
     },
     module: {
       rules: [

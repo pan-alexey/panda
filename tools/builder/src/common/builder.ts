@@ -20,7 +20,7 @@ export type BuilderState = {
   progress: BuilderProgress;
 };
 
-export type BuilderCallback = (state: BuilderState) => void;
+export type BuilderCallback = (state: BuilderState) => void | Promise<void>;
 
 export abstract class Builder {
   protected compiler: webpack.Compiler;
